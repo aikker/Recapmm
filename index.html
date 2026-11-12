@@ -188,13 +188,30 @@ footer {
     </button>
   </section>
 
-  <section class="panel">
-    <h3>🤖 AI Movie Recap</h3>
-    <p style="color:#94a3b8">
-      AI Recap Engine will be connected in Phase 2.
-    </p>
-    <button disabled>Generate AI Recap</button>
-  </section>
+
+<section class="panel">
+  <h3>🤖 AI Movie Recap</h3>
+
+  <p style="color:#94a3b8">
+    Analyze your movie and generate Myanmar recap.
+  </p>
+
+  <button id="analyzeBtn">
+    Generate AI Recap
+  </button>
+
+  <pre id="aiResult"
+    style="white-space:pre-wrap;
+    overflow-wrap:anywhere;
+    color:#38d9a9;
+    font-size:14px;
+    margin-top:15px">
+    Waiting for video...
+  </pre>
+</section>
+
+<script type="module" src="ai.js"></script>
+
 
   <section class="panel">
     <h3>🎙️ Myanmar AI Voice</h3>

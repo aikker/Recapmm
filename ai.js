@@ -1,5 +1,5 @@
 
-const WORKER_URL = "https://recapmmai.aike-sai-09.workers.dev/";
+const WORKER_URL = "https://recapkit-ai.aike-sai-09.workers.dev/";
 
 const fileInput = document.getElementById("videoFile");
 const preview = document.getElementById("preview");

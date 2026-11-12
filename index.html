@@ -1,1 +1,307 @@
 
+
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RecapKit MM - AI Movie Studio</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #0b1020;
+  color: #f8fafc;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  padding: 20px;
+  background: #111a2e;
+  border-bottom: 1px solid #26334c;
+}
+
+header h2 {
+  margin: 0;
+  color: #38d9a9;
+}
+
+header p {
+  color: #94a3b8;
+  margin-bottom: 0;
+  font-size: 13px;
+}
+
+.container {
+  max-width: 850px;
+  margin: auto;
+  padding: 20px;
+}
+
+.panel {
+  background: #141e32;
+  border: 1px solid #293750;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 18px;
+}
+
+h3 {
+  margin-top: 0;
+}
+
+.upload {
+  border: 2px dashed #38bdf8;
+  border-radius: 12px;
+  padding: 30px 15px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.upload input {
+  width: 100%;
+  margin-top: 15px;
+}
+
+video {
+  width: 100%;
+  max-height: 420px;
+  margin-top: 15px;
+  background: #000;
+  border-radius: 10px;
+}
+
+.info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.info div {
+  background: #0c1528;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.info small {
+  color: #94a3b8;
+}
+
+.info h3 {
+  color: #38d9a9;
+  margin: 8px 0 0;
+}
+
+button {
+  background: #10b981;
+  color: #04130e;
+  border: 0;
+  padding: 13px 20px;
+  border-radius: 9px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 15px;
+}
+
+button:disabled {
+  opacity: .5;
+}
+
+#status {
+  color: #38d9a9;
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+footer {
+  text-align: center;
+  color: #64748b;
+  padding: 25px;
+  font-size: 12px;
+}
+
+@media(max-width:480px) {
+  .container {
+    padding: 12px;
+  }
+  .info {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>🎬 RecapKit MM</h2>
+  <p>Myanmar AI Movie Recap Studio</p>
+</header>
+
+<main class="container">
+
+  <section class="panel">
+    <h3>📤 Upload Your Video</h3>
+
+    <div class="upload">
+      <p>Choose your Movie Video</p>
+      <p style="color:#94a3b8;font-size:13px">
+        MP4 / MOV / WebM
+      </p>
+
+      <input
+        type="file"
+        id="videoFile"
+        accept="video/*"
+      >
+    </div>
+
+    <video
+      id="preview"
+      controls
+      playsinline
+      hidden
+    ></video>
+
+    <div class="info">
+      <div>
+        <small>Video Duration</small>
+        <h3 id="duration">00:00</h3>
+      </div>
+
+      <div>
+        <small>File Size</small>
+        <h3 id="filesize">0 MB</h3>
+      </div>
+    </div>
+
+    <p id="status">Please select a video.</p>
+
+    <button id="resetBtn" disabled>
+      Reset Video
+    </button>
+  </section>
+
+  <section class="panel">
+    <h3>🤖 AI Movie Recap</h3>
+    <p style="color:#94a3b8">
+      AI Recap Engine will be connected in Phase 2.
+    </p>
+    <button disabled>Generate AI Recap</button>
+  </section>
+
+  <section class="panel">
+    <h3>🎙️ Myanmar AI Voice</h3>
+    <p style="color:#94a3b8">
+      Myanmar Voice Engine will be connected in Phase 3.
+    </p>
+    <button disabled>Generate Myanmar Voice</button>
+  </section>
+
+  <section class="panel">
+    <h3>📝 Myanmar Subtitle</h3>
+    <p style="color:#94a3b8">
+      SRT Subtitle Engine will be connected in Phase 4.
+    </p>
+    <button disabled>Generate Subtitle</button>
+  </section>
+
+</main>
+
+<footer>
+  RecapKit MM © 2026
+  <br>AI Movie Recap Studio
+</footer>
+
+<script>
+const fileInput = document.getElementById("videoFile");
+const preview = document.getElementById("preview");
+const durationText = document.getElementById("duration");
+const sizeText = document.getElementById("filesize");
+const statusText = document.getElementById("status");
+const resetBtn = document.getElementById("resetBtn");
+
+let currentURL = null;
+
+function formatTime(seconds) {
+  if (!Number.isFinite(seconds)) return "--:--";
+
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+
+  const pad = n => String(n).padStart(2, "0");
+
+  return h > 0
+    ? `${pad(h)}:${pad(m)}:${pad(s)}`
+    : `${pad(m)}:${pad(s)}`;
+}
+
+fileInput.addEventListener("change", () => {
+  const file = fileInput.files[0];
+
+  if (!file) return;
+
+  if (!file.type.startsWith("video/")) {
+    statusText.textContent = "Please select a video file.";
+    return;
+  }
+
+  if (currentURL) {
+    URL.revokeObjectURL(currentURL);
+  }
+
+  currentURL = URL.createObjectURL(file);
+
+  preview.src = currentURL;
+  preview.hidden = false;
+
+  sizeText.textContent =
+    (file.size / (1024 * 1024)).toFixed(2) + " MB";
+
+  durationText.textContent = "Loading...";
+  statusText.textContent = "Reading video information...";
+
+  preview.onloadedmetadata = () => {
+    durationText.textContent =
+      formatTime(preview.duration);
+
+    statusText.textContent =
+      "Video loaded successfully!";
+
+    resetBtn.disabled = false;
+  };
+
+  preview.onerror = () => {
+    statusText.textContent =
+      "Unable to read this video format.";
+  };
+});
+
+resetBtn.addEventListener("click", () => {
+  preview.pause();
+  preview.removeAttribute("src");
+  preview.load();
+  preview.hidden = true;
+
+  if (currentURL) {
+    URL.revokeObjectURL(currentURL);
+    currentURL = null;
+  }
+
+  fileInput.value = "";
+  durationText.textContent = "00:00";
+  sizeText.textContent = "0 MB";
+  statusText.textContent = "Please select a video.";
+  resetBtn.disabled = true;
+});
+</script>
+
+</body>
+</html>

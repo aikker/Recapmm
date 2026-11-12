@@ -1,324 +1,111 @@
-
-
 <!DOCTYPE html>
 <html lang="my">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RecapKit MM - AI Movie Studio</title>
-
-<style>
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  background: #0b1020;
-  color: #f8fafc;
-  font-family: Arial, sans-serif;
-}
-
-header {
-  padding: 20px;
-  background: #111a2e;
-  border-bottom: 1px solid #26334c;
-}
-
-header h2 {
-  margin: 0;
-  color: #38d9a9;
-}
-
-header p {
-  color: #94a3b8;
-  margin-bottom: 0;
-  font-size: 13px;
-}
-
-.container {
-  max-width: 850px;
-  margin: auto;
-  padding: 20px;
-}
-
-.panel {
-  background: #141e32;
-  border: 1px solid #293750;
-  border-radius: 14px;
-  padding: 18px;
-  margin-bottom: 18px;
-}
-
-h3 {
-  margin-top: 0;
-}
-
-.upload {
-  border: 2px dashed #38bdf8;
-  border-radius: 12px;
-  padding: 30px 15px;
-  text-align: center;
-  cursor: pointer;
-}
-
-.upload input {
-  width: 100%;
-  margin-top: 15px;
-}
-
-video {
-  width: 100%;
-  max-height: 420px;
-  margin-top: 15px;
-  background: #000;
-  border-radius: 10px;
-}
-
-.info {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 18px;
-}
-
-.info div {
-  background: #0c1528;
-  padding: 15px;
-  border-radius: 10px;
-}
-
-.info small {
-  color: #94a3b8;
-}
-
-.info h3 {
-  color: #38d9a9;
-  margin: 8px 0 0;
-}
-
-button {
-  background: #10b981;
-  color: #04130e;
-  border: 0;
-  padding: 13px 20px;
-  border-radius: 9px;
-  font-weight: bold;
-  cursor: pointer;
-  width: 100%;
-  margin-top: 15px;
-}
-
-button:disabled {
-  opacity: .5;
-}
-
-#status {
-  color: #38d9a9;
-  margin-top: 12px;
-  font-size: 14px;
-}
-
-footer {
-  text-align: center;
-  color: #64748b;
-  padding: 25px;
-  font-size: 12px;
-}
-
-@media(max-width:480px) {
-  .container {
-    padding: 12px;
-  }
-  .info {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RecapMM - Auto 5-Min Movie Recap Generator</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+    <header class="navbar">
+        <div class="logo">🎬 Recap<span>MM</span></div>
+        <div class="badge">AI Auto 5-Min Recap Engine</div>
+    </header>
 
-<header>
-  <h2>🎬 RecapKit MM</h2>
-  <p>Myanmar AI Movie Recap Studio</p>
-</header>
+    <main class="container">
+        <!-- Left Panel: Controls & Workflow -->
+        <section class="panel control-panel">
+            <h2>၁။ ဗီဒီယိုနှင့် AI ပြင်ဆင်မှု</h2>
+            
+            <div class="upload-box" id="dropZone">
+                <input type="file" id="videoInput" accept="video/*" hidden>
+                <div class="upload-content">
+                    <span class="icon">📁</span>
+                    <p>ဇာတ်ကားအရှည်ဖိုင်ကို ဤနေရာတွင် ထည့်ပါ</p>
+                    <small>MP4, WebM, MKV (Browser မှ တိုက်ရိုက်ဖြတ်ပေးပါမည်)</small>
+                    <button class="btn-secondary" onclick="document.getElementById('videoInput').click()">ဖိုင်ရွေးချယ်မည်</button>
+                </div>
+            </div>
 
-<main class="container">
+            <div class="file-info" id="fileInfo" style="display: none;">
+                <div><strong>ဖိုင်အမည်:</strong> <span id="fileName">-</span></div>
+                <div><strong>မူရင်းကြာချိန်:</strong> <span id="fileDuration">-</span></div>
+                <div><strong>Recap ပစ်မှတ်:</strong> <span id="targetDuration">5:00 မိနစ် (Auto-Cut)</span></div>
+            </div>
 
-  <section class="panel">
-    <h3>📤 Upload Your Video</h3>
+            <div class="settings-group">
+                <label>AI API Key (Gemini / OpenAI - မထည့်လည်း Demo Mode သုံးနိုင်သည်)</label>
+                <input type="password" id="apiKey" placeholder="AIzaSy... သို့မဟုတ် အလွတ်ထားပါ">
+            </div>
 
-    <div class="upload">
-      <p>Choose your Movie Video</p>
-      <p style="color:#94a3b8;font-size:13px">
-        MP4 / MOV / WebM
-      </p>
+            <div class="settings-group">
+                <label>Recap ဇာတ်လမ်းအမျိုးအစား (Genre Tone)</label>
+                <select id="recapTone">
+                    <option value="thriller">သည်းထိတ်ရင်ဖို / အက်ရှင် (Thriller & Suspense)</option>
+                    <option value="drama">ဒရာမာ / ခံစားချက်အသားပေး (Emotional Drama)</option>
+                    <option value="scifi">သိပ္ပံနှင့် ထူးဆန်းထွေလာ (Sci-Fi & Mystery)</option>
+                </select>
+            </div>
 
-      <input
-        type="file"
-        id="videoFile"
-        accept="video/*"
-      >
-    </div>
+            <div class="settings-group checkbox-group">
+                <label><input type="checkbox" id="burnSubtitles" checked> ဗီဒီယိုပေါ်တွင် မြန်မာစာတန်းထိုး တစ်ပါတည်းကပ်မည်</label>
+                <label><input type="checkbox" id="enableVoice" checked> AI Voiceover အသံဖတ်စနစ် ဖွင့်မည်</label>
+            </div>
 
-    <video
-      id="preview"
-      controls
-      playsinline
-      hidden
-    ></video>
+            <button id="startAutoBtn" class="btn-primary" disabled>
+                ⚡ 5-Min Auto Recap စတင်ထုတ်လုပ်မည်
+            </button>
 
-    <div class="info">
-      <div>
-        <small>Video Duration</small>
-        <h3 id="duration">00:00</h3>
-      </div>
+            <!-- Progress Steps -->
+            <div class="workflow-status">
+                <div class="step" id="step1">1. ဗီဒီယို အချက်အလက် စစ်ဆေးခြင်း</div>
+                <div class="step" id="step2">2. AI မှ ၅ မိနစ်စာ ဇာတ်ညွှန်းနှင့် အချိန်မှတ်ခြင်း</div>
+                <div class="step" id="step3">3. မြန်မာစာတန်းထိုး (.SRT) ချိတ်ဆက်ခြင်း</div>
+                <div class="step" id="step4">4. အဓိကအခန်းများကို ဖြတ်တောက်ပေါင်းစပ်ခြင်း (Rendering)</div>
+            </div>
+        </section>
 
-      <div>
-        <small>File Size</small>
-        <h3 id="filesize">0 MB</h3>
-      </div>
-    </div>
+        <!-- Right Panel: Video Canvas Preview & Output -->
+        <section class="panel preview-panel">
+            <h2>၂။ တိုက်ရိုက်ထုတ်လုပ်မှုနှင့် ရလဒ် (Preview & Export)</h2>
+            
+            <div class="canvas-wrapper">
+                <!-- Hidden source video -->
+                <video id="sourceVideo" crossorigin="anonymous" playsinline hidden></video>
+                <!-- Output rendering canvas -->
+                <canvas id="renderCanvas" width="854" height="480"></canvas>
+                <div class="overlay-status" id="renderOverlay">ဗီဒီယိုဖိုင် ထည့်သွင်းပေးပါ</div>
+            </div>
 
-    <p id="status">Please select a video.</p>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <p class="status-text" id="statusText">အသင့်ရှိနေပါသည်...</p>
 
-    <button id="resetBtn" disabled>
-      Reset Video
-    </button>
-  </section>
+            <!-- Download Actions -->
+            <div class="export-actions">
+                <a id="downloadVideoBtn" class="btn-success disabled" download="RecapMM_5Min_Video.webm">
+                    📥 Recap Video ဒေါင်းလုဒ်ဆွဲမည် (.webm)
+                </a>
+                <button id="downloadSrtBtn" class="btn-secondary" disabled>
+                    📄 စာတန်းထိုးဖိုင် (.srt) ဒေါင်းမည်
+                </button>
+            </div>
 
+            <!-- Generated Script & Timestamps Preview -->
+            <div class="script-box">
+                <h3>AI ထုတ်ပေးထားသော ၅ မိနစ်စာ ဇာတ်ညွှန်းနှင့် အချိန်ဇယား</h3>
+                <div id="scriptList" class="script-list">
+                    <p class="empty-msg">ဗီဒီယိုထည့်ပြီး Auto ခလုတ်နှိပ်ပါက ဇာတ်ညွှန်းများ ပေါ်လာပါမည်။</p>
+                </div>
+            </div>
+        </section>
+    </main>
 
-<section class="panel">
-  <h3>🤖 AI Movie Recap</h3>
-
-  <p style="color:#94a3b8">
-    Analyze your movie and generate Myanmar recap.
-  </p>
-
-  <button id="analyzeBtn">
-    Generate AI Recap
-  </button>
-
-  <pre id="aiResult"
-    style="white-space:pre-wrap;
-    overflow-wrap:anywhere;
-    color:#38d9a9;
-    font-size:14px;
-    margin-top:15px">
-    Waiting for video...
-  </pre>
-</section>
-
-<script type="module" src="ai.js"></script>
-
-
-  <section class="panel">
-    <h3>🎙️ Myanmar AI Voice</h3>
-    <p style="color:#94a3b8">
-      Myanmar Voice Engine will be connected in Phase 3.
-    </p>
-    <button disabled>Generate Myanmar Voice</button>
-  </section>
-
-  <section class="panel">
-    <h3>📝 Myanmar Subtitle</h3>
-    <p style="color:#94a3b8">
-      SRT Subtitle Engine will be connected in Phase 4.
-    </p>
-    <button disabled>Generate Subtitle</button>
-  </section>
-
-</main>
-
-<footer>
-  RecapKit MM © 2026
-  <br>AI Movie Recap Studio
-</footer>
-
-<script>
-const fileInput = document.getElementById("videoFile");
-const preview = document.getElementById("preview");
-const durationText = document.getElementById("duration");
-const sizeText = document.getElementById("filesize");
-const statusText = document.getElementById("status");
-const resetBtn = document.getElementById("resetBtn");
-
-let currentURL = null;
-
-function formatTime(seconds) {
-  if (!Number.isFinite(seconds)) return "--:--";
-
-  const h = Math.floor(seconds / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = Math.floor(seconds % 60);
-
-  const pad = n => String(n).padStart(2, "0");
-
-  return h > 0
-    ? `${pad(h)}:${pad(m)}:${pad(s)}`
-    : `${pad(m)}:${pad(s)}`;
-}
-
-fileInput.addEventListener("change", () => {
-  const file = fileInput.files[0];
-
-  if (!file) return;
-
-  if (!file.type.startsWith("video/")) {
-    statusText.textContent = "Please select a video file.";
-    return;
-  }
-
-  if (currentURL) {
-    URL.revokeObjectURL(currentURL);
-  }
-
-  currentURL = URL.createObjectURL(file);
-
-  preview.src = currentURL;
-  preview.hidden = false;
-
-  sizeText.textContent =
-    (file.size / (1024 * 1024)).toFixed(2) + " MB";
-
-  durationText.textContent = "Loading...";
-  statusText.textContent = "Reading video information...";
-
-  preview.onloadedmetadata = () => {
-    durationText.textContent =
-      formatTime(preview.duration);
-
-    statusText.textContent =
-      "Video loaded successfully!";
-
-    resetBtn.disabled = false;
-  };
-
-  preview.onerror = () => {
-    statusText.textContent =
-      "Unable to read this video format.";
-  };
-});
-
-resetBtn.addEventListener("click", () => {
-  preview.pause();
-  preview.removeAttribute("src");
-  preview.load();
-  preview.hidden = true;
-
-  if (currentURL) {
-    URL.revokeObjectURL(currentURL);
-    currentURL = null;
-  }
-
-  fileInput.value = "";
-  durationText.textContent = "00:00";
-  sizeText.textContent = "0 MB";
-  statusText.textContent = "Please select a video.";
-  resetBtn.disabled = true;
-});
-</script>
-
+    <!-- Scripts in Modular Order -->
+    <script src="subtitle.js"></script>
+    <script src="ai.js"></script>
+    <script src="video.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
